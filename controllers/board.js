@@ -27,7 +27,6 @@ const createPost = async (req, res) => {
             title: req.body.title,
             content: req.body.content,
         };
-        console.log(req.body);
         const result = await db.Post.create(post);
         res.status(201).send(result);
     } catch (err) {

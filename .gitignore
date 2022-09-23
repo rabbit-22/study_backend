@@ -142,3 +142,4 @@ dist
 node_modules
 seeders
 migrations
+sessions

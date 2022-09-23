@@ -3,11 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-// var bodyParser = require('body-parser');
+var cors = require('cors');
+var session = require('express-session');
+var fileStore = require('session-file-store')(session);
 
 var indexRouter = require('./routes/index');
-
 var boardRouter = require('./routes/board');
+var userRouter = require('./routes/users');
 
 var app = express();
 
@@ -18,10 +20,24 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 // app.use(express.urlencoded({ extended: false }));
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
+
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: true,
+  store: new fileStore({logFn: function(){}})
+}));
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', indexRouter);
 app.use('/api/board', boardRouter);
+app.use('/api/users', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

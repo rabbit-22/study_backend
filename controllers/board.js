@@ -2,8 +2,13 @@ const db = require('../models');
 
 const getPosts = async (req, res) => {
     try {
-        const posts = await db.Post.findAll();
-        res.status(200).send(posts);
+        if (req.session.userId){
+            const posts = await db.Post.findAll();
+            res.status(200).send(posts);
+        }
+        else {
+            res.redirect('/');
+        }
     } catch (err) {
         res.status(err.status || 500).send(err.message);
     }
